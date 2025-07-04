@@ -226,6 +226,20 @@ export default {
         alert("ต้องมีรายละเอียดงานอย่างน้อย 1 รายการ");
       }
     },
+    // เมธอดสำหรับการเปลี่ยนภาพโปรไฟล์
+    triggerImageUpload() {
+      this.$refs.imageInput.click();
+    },
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imageUrl = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
     // เมธอดสำหรับ Export
     exportResume() {
       window.print();
@@ -281,7 +295,28 @@ export default {
         <div id="resume" class="d-flex" :style="cssVariables">
           <div class="left-col">
             <ResumeSection class="resume-section">
-              <img :src="imageUrl" class="profile-pic" alt="profile picture" />
+              <div class="profile-pic-container">
+                <img
+                  :src="imageUrl"
+                  class="profile-pic"
+                  alt="profile picture"
+                />
+                <button
+                  v-if="isEditMode"
+                  class="change-image-btn"
+                  @click="triggerImageUpload"
+                  title="เปลี่ยนภาพโปรไฟล์"
+                >
+                  📷
+                </button>
+              </div>
+              <input
+                ref="imageInput"
+                type="file"
+                accept="image/*"
+                @change="handleImageUpload"
+                style="display: none"
+              />
 
               <SectionHeadline
                 :headline="headlines[0]"
@@ -606,16 +641,45 @@ export default {
   margin-block-end: 0px;
   margin-block-start: 5px;
 }
+/* สไตล์ภาพโปรไฟล์ */
+.profile-pic-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
 .profile-pic {
   display: block;
   width: 160px;
   height: 160px;
   border: 5px solid var(--highlight-color-left);
-  margin-bottom: 20px;
   object-fit: cover;
-  margin-left: auto;
-  margin-right: auto;
   border-radius: 50%;
+}
+
+.change-image-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: var(--highlight-color-left);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.change-image-btn:hover {
+  background-color: var(--highlight-color-right);
+  transform: scale(1.1);
 }
 .experience-item {
   margin-bottom: 1rem;
