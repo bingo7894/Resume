@@ -5,6 +5,8 @@ import Sidebar from "./components/Sidebar.vue";
 import ColorInput from "./components/ColorInput.vue";
 import EditToggle from "./components/EditToggle.vue";
 
+import resumeData from "./data/resumeData.js";
+
 export default {
   components: {
     ResumeSection,
@@ -13,113 +15,14 @@ export default {
     ColorInput,
     EditToggle,
   },
+
   data() {
     return {
+      ...resumeData,
       isEditMode: false,
-      name: "Pokpong Padjunreed",
-      title: "Programmer",
-      introText:
-        "A passionate programmer with a strong foundation in data analytics, software engineering, and backend development. Seeking opportunities to leverage my skills in innovative projects.",
-      imageUrl: "/cat.jpg",
-      headlines: [
-        "About me",
-        "Contact",
-        "Skills",
-        "Certifications",
-        "Experience",
-        "Education",
-      ],
-      contact: {
-        phone: "081-512-7057",
-        email: "pokpong@gmail.com",
-        address: "ซอยจันทน์ 27 แขวงทุ่งวัดดอน เขตสาทร กรุงเทพมหานคร",
-      },
-      skills: [
-        { name: "Python (Data Analysis, Automation)" },
-        { name: "Python (Data Analysis, Automation" },
-        { name: "Java (Spring Boot)" },
-      ],
-      experience: [
-        {
-          title: "Programmer",
-          company: "Makro",
-          location: "Bangkok",
-          date: "2022–Present",
-          description: [
-            "Developed internal web applications using Vue.js and Node.js",
-            "Collaborated with cross-functional teams to improve supply chain software",
-            "Integrated RESTful APIs and optimized database queries",
-          ],
-        },
-        {
-          title: "Software Developer",
-          company: "7-Eleven",
-          location: "Bangkok",
-          date: "2021–2022",
-          description: [
-            "Built backend services using Java Spring Boot",
-            "Designed and maintained MySQL database schemas",
-            "Supported deployment pipeline using GitLab CI/CD",
-          ],
-        },
-        {
-          title: "Junior Developer",
-          company: "Lotus's",
-          location: "Bangkok",
-          date: "2020–2021",
-          description: [
-            "Assisted in front-end development using HTML/CSS and Vue.js",
-            "Performed unit testing and bug fixing for retail system modules",
-            "Wrote documentation for software components",
-          ],
-        },
-      ],
-      certifications: [
-        {
-          name: "Google Data Analytics",
-          issuer: "Coursera",
-          year: "2024",
-        },
-        {
-          name: "AWS Certified Cloud Practitioner",
-          issuer: "Amazon Web Services",
-          year: "2023",
-        },
-      ],
-      education: [
-        {
-          degree: "Bachelor of Engineering",
-          major: "Computer Engineering",
-          school: "มหาวิทยาลัยเทคโนโลยีราชมงคลกรุงเทพ",
-          year: "2022",
-        },
-        {
-          degree: "High School",
-          major: "Science-Math Program",
-          school: "โรงเรียนพระแม่มารีสาทร",
-          year: "2018",
-        },
-        {
-          degree: "Junior High School",
-          major: "Science Program",
-          school: "โรงเรียนป่างิ้ววิทยา",
-          year: "2015",
-        },
-      ],
-      colors: {
-        left: {
-          highlight: "#ff9900",
-          background: "#f5f5f5",
-          text: "#000000",
-        },
-        right: {
-          highlight: "#3366ff",
-          background: "#ffffff",
-          text: "#000000",
-        },
-      },
     };
   },
+
   computed: {
     cssVariables() {
       return {
@@ -132,6 +35,7 @@ export default {
       };
     },
   },
+
   methods: {
     toggleEditMode(isEdit) {
       this.isEditMode = isEdit;
@@ -160,7 +64,6 @@ export default {
     updateCertification(event, key, index) {
       this.certifications[index][key] = event.target.innerText;
     },
-    // เมธอดเพิ่มข้อมูลใหม่
     addSkill() {
       this.skills.push({ name: "ทักษะใหม่" });
     },
@@ -194,7 +97,6 @@ export default {
     addExperienceDescription(index) {
       this.experience[index].description.push("รายละเอียดใหม่");
     },
-    // เมธอดลบข้อมูล
     deleteSkill(index) {
       if (this.skills.length > 1) {
         this.skills.splice(index, 1);
@@ -226,7 +128,19 @@ export default {
         alert("ต้องมีรายละเอียดงานอย่างน้อย 1 รายการ");
       }
     },
-    // เมธอดสำหรับการเปลี่ยนภาพโปรไฟล์
+    updateSoftSkill(event, index) {
+      this.softSkills[index].name = event.target.innerText;
+    },
+    addSoftSkill() {
+      this.softSkills.push({ name: "ทักษะใหม่" });
+    },
+    deleteSoftSkill(index) {
+      if (this.softSkills.length > 1) {
+        this.softSkills.splice(index, 1);
+      } else {
+        alert("ต้องมีทักษะอย่างน้อย 1 รายการ");
+      }
+    },
     triggerImageUpload() {
       this.$refs.imageInput.click();
     },
@@ -240,9 +154,124 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    // เมธอดสำหรับ Export
+    // แก้ไขฟังก์ชัน exportResume() ใน methods
+    // แทนที่ฟังก์ชัน exportResume() ในส่วน methods
     exportResume() {
-      window.print();
+      // ลบ style เก่าก่อน (ถ้ามี)
+      const oldStyle = document.getElementById("dynamic-print-style");
+      if (oldStyle) {
+        document.head.removeChild(oldStyle);
+      }
+
+      // สร้าง style ใหม่พร้อมกับสีที่กำหนด
+      const style = document.createElement("style");
+      style.setAttribute("id", "dynamic-print-style");
+      style.innerHTML = `
+    @media print {
+      /* Override CSS Variables with actual color values */
+      :root {
+        --highlight-color-left: ${this.colors.left.highlight} !important;
+        --background-color-left: ${this.colors.left.background} !important;
+        --text-color-left: ${this.colors.left.text} !important;
+        --highlight-color-right: ${this.colors.right.highlight} !important;
+        --background-color-right: ${this.colors.right.background} !important;
+        --text-color-right: ${this.colors.right.text} !important;
+      }
+
+      /* Apply colors directly to elements */
+      .left-col {
+        background-color: ${this.colors.left.background} !important;
+        color: ${this.colors.left.text} !important;
+        border-right: 1px solid ${this.colors.left.highlight} !important;
+      }
+
+      .right-col {
+        background-color: ${this.colors.right.background} !important;
+        color: ${this.colors.right.text} !important;
+      }
+
+      .personal-name {
+        color: ${this.colors.right.highlight} !important;
+        border-bottom: 1px solid ${this.colors.right.highlight} !important;
+      }
+
+      .personal-title {
+        border-bottom: 1px solid ${this.colors.right.highlight} !important;
+      }
+
+      .profile-pic {
+        border: 3px solid ${this.colors.left.highlight} !important;
+      }
+
+      .add-btn {
+        background-color: ${this.colors.left.highlight} !important;
+      }
+
+      .right-col .add-btn {
+        background-color: ${this.colors.right.highlight} !important;
+      }
+
+      .change-image-btn {
+        background-color: ${this.colors.left.highlight} !important;
+      }
+
+      /* Section headlines color */
+      .section-headline {
+        color: ${this.colors.left.text} !important;
+      }
+
+      .right-col .section-headline {
+        color: ${this.colors.right.text} !important;
+      }
+
+      /* Contact items */
+      .contact-item {
+        color: ${this.colors.left.text} !important;
+      }
+
+      /* Experience meta */
+      .experience-meta {
+        color: ${this.colors.right.text} !important;
+        opacity: 0.8;
+      }
+
+      /* Lists */
+      .left-col ul li {
+        color: ${this.colors.left.text} !important;
+      }
+
+      .right-col ul li {
+        color: ${this.colors.right.text} !important;
+      }
+
+      /* Force color rendering */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+    }
+  `;
+
+      document.head.appendChild(style);
+
+      // แสดง print dialog
+      setTimeout(() => {
+        // เพิ่ม class สำหรับ print mode
+        document.body.classList.add("printing");
+
+        window.print();
+
+        // ลบ class หลังจาก print
+        setTimeout(() => {
+          document.body.classList.remove("printing");
+
+          // ลบ style หลังจาก print เสร็จ
+          const printStyle = document.getElementById("dynamic-print-style");
+          if (printStyle) {
+            document.head.removeChild(printStyle);
+          }
+        }, 1000);
+      }, 200);
     },
   },
 };
@@ -285,7 +314,6 @@ export default {
           @color-changed="colors.right.text = $event"
         />
 
-        <!-- ปุ่ม Export แสดงเฉพาะเมื่อไม่อยู่ในโหมดแก้ไข -->
         <button v-if="!isEditMode" class="export-btn" @click="exportResume">
           📄 Export Resume
         </button>
@@ -389,6 +417,38 @@ export default {
                 </li>
               </ul>
               <button v-if="isEditMode" class="add-btn" @click="addSkill">
+                + เพิ่มทักษะ
+              </button>
+            </ResumeSection>
+
+            <ResumeSection>
+              <SectionHeadline
+                :headline="headlines[6]"
+                @headline-edited="updateHeadline($event, 6)"
+              />
+              <ul>
+                <li
+                  v-for="(softSkill, index) in softSkills"
+                  :key="index"
+                  class="editable-item"
+                >
+                  <span
+                    :contenteditable="isEditMode"
+                    @input="updateSoftSkill($event, index)"
+                  >
+                    {{ softSkill.name }}
+                  </span>
+                  <button
+                    v-if="isEditMode"
+                    class="delete-btn"
+                    @click="deleteSoftSkill(index)"
+                    title="ลบทักษะ"
+                  >
+                    ❌
+                  </button>
+                </li>
+              </ul>
+              <button v-if="isEditMode" class="add-btn" @click="addSoftSkill">
                 + เพิ่มทักษะ
               </button>
             </ResumeSection>
@@ -592,208 +652,4 @@ export default {
   </main>
 </template>
 
-<style scoped>
-#resume {
-  display: flex;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
-    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-  height: 297mm;
-  width: 210mm;
-}
-
-.left-col {
-  background-color: var(--background-color-left);
-  color: var(--text-color-left);
-  border-right: 1px solid var(--highlight-color-left);
-  width: 30%;
-  padding: 30px;
-}
-.right-col {
-  background-color: var(--background-color-right);
-  color: var(--text-color-right);
-  border-right: 1px solid var(--highlight-color-right);
-  width: 70%;
-  padding: 30px;
-}
-
-.resume-section {
-  margin-bottom: 30px;
-}
-.personal-name {
-  font-weight: 300;
-  color: var(--highlight-color-right);
-  font-size: 28px;
-  border-bottom: 1px solid var(--highlight-color-right);
-  margin: 0;
-  margin-left: -30px;
-  padding: 30px;
-  padding-bottom: 15px;
-}
-.personal-title {
-  border-bottom: 1px solid var(--highlight-color-right);
-  margin: 0 0 20px -30px;
-  padding: 15px 0 15px 30px;
-  font-weight: 300;
-  font-size: 20px;
-}
-#resume ul {
-  padding-inline-start: 16px;
-  margin-block-end: 0px;
-  margin-block-start: 5px;
-}
-/* สไตล์ภาพโปรไฟล์ */
-.profile-pic-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.profile-pic {
-  display: block;
-  width: 160px;
-  height: 160px;
-  border: 5px solid var(--highlight-color-left);
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.change-image-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: var(--highlight-color-left);
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.change-image-btn:hover {
-  background-color: var(--highlight-color-right);
-  transform: scale(1.1);
-}
-.experience-item {
-  margin-bottom: 1rem;
-}
-
-.experience-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #555;
-}
-.half {
-  display: flex;
-  justify-content: space-between;
-}
-
-/* สไตล์ปุ่มเพิ่ม */
-.add-btn {
-  background-color: var(--highlight-color-left);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-}
-
-.add-btn:hover {
-  background-color: var(--highlight-color-right);
-}
-
-.add-btn.small {
-  font-size: 0.8rem;
-  padding: 3px 8px;
-}
-
-.right-col .add-btn {
-  background-color: var(--highlight-color-right);
-}
-
-.right-col .add-btn:hover {
-  background-color: var(--highlight-color-left);
-}
-
-/* สไตล์ปุ่มลบ */
-.delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-  padding: 2px 4px;
-  margin-left: 8px;
-  border-radius: 3px;
-  transition: background-color 0.3s;
-}
-
-.delete-btn:hover {
-  background-color: rgba(255, 0, 0, 0.1);
-}
-
-/* สไตล์ไอเท็มที่แก้ไขได้ */
-.editable-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-}
-
-.experience-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.education-item {
-  margin-bottom: 10px;
-}
-
-.education-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-/* สไตล์ปุ่ม Export */
-.export-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  width: 100%;
-  margin-top: 20px;
-  transition: background-color 0.3s;
-}
-
-.export-btn:hover {
-  background-color: #218838;
-}
-
-.contact-item {
-  margin-bottom: 8px;
-}
-
-.contact-item .icon {
-  margin-right: 8px;
-}
-
-/* ป้องกันการแก้ไขเมื่อไม่อยู่ในโหมดแก้ไข */
-[contenteditable="false"] {
-  pointer-events: none;
-}
-</style>
+<style src="./style/resume.css"></style>

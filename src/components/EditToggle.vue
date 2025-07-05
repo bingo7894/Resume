@@ -81,6 +81,7 @@ export default {
   user-select: none;
   transition: background-color 0.25s ease;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 20px;
 }
 
 .edit-toggle:hover {
