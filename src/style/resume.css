@@ -209,11 +209,18 @@
 }
 
 .contact-item {
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .contact-item .icon {
   margin-right: 8px;
+}
+.contact-text {
+  outline: none;
+  min-width: 0;
 }
 
 /* ป้องกันการแก้ไขเมื่อไม่อยู่ในโหมดแก้ไข */

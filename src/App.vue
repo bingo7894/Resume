@@ -365,26 +365,35 @@ export default {
                 @headline-edited="updateHeadline($event, 1)"
               />
               <div class="contact-list">
-                <div
-                  class="contact-item"
-                  :contenteditable="isEditMode"
-                  @input="updateNestedProperty($event, 'contact', 'phone')"
-                >
-                  <span class="icon">📞</span> {{ contact.phone }}
+                <div class="contact-item">
+                  <span class="icon">📞</span>
+                  <div
+                    class="contact-text"
+                    :contenteditable="isEditMode"
+                    @input="updateNestedProperty($event, 'contact', 'phone')"
+                  >
+                    {{ contact.phone }}
+                  </div>
                 </div>
-                <div
-                  class="contact-item"
-                  :contenteditable="isEditMode"
-                  @input="updateNestedProperty($event, 'contact', 'email')"
-                >
-                  <span class="icon">📧</span> {{ contact.email }}
+                <div class="contact-item">
+                  <span class="icon">📧</span>
+                  <div
+                    class="contact-text"
+                    :contenteditable="isEditMode"
+                    @input="updateNestedProperty($event, 'contact', 'email')"
+                  >
+                    {{ contact.email }}
+                  </div>
                 </div>
-                <div
-                  class="contact-item"
-                  :contenteditable="isEditMode"
-                  @input="updateNestedProperty($event, 'contact', 'address')"
-                >
-                  <span class="icon">📍</span> {{ contact.address }}
+                <div class="contact-item">
+                  <span class="icon">📍</span>
+                  <div
+                    class="contact-text"
+                    :contenteditable="isEditMode"
+                    @input="updateNestedProperty($event, 'contact', 'address')"
+                  >
+                    {{ contact.address }}
+                  </div>
                 </div>
               </div>
             </ResumeSection>
@@ -653,3 +662,16 @@ export default {
 </template>
 
 <style src="./style/resume.css"></style>
+<style scoped>
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.contact-text {
+  outline: none;
+  min-width: 0;
+}
+</style>
